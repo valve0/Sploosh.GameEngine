@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SplooshKaboom.GameEngine\Sploosh.GameEngine.csproj" />
+    <ProjectReference Include="..\Sploosh.GameEngine\Sploosh.GameEngine.csproj" />
   </ItemGroup>
 
 </Project>
