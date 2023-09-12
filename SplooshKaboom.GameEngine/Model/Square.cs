@@ -1,43 +1,36 @@
-﻿namespace SplooshGameEngine.Model
+﻿using SplooshKaboom.GameEngine;
+
+namespace SplooshGameEngine.Model
 {
     public class Square
     {
-        private Squid? _squid;
-        private EnvironmentVariables _enviromentVariables;
-
-        public Square(EnvironmentVariables environmentVariables)
+        public Square()
         {
-            _enviromentVariables = environmentVariables;
-            ImagePath = _enviromentVariables.SquareStartImagePath;
+            SquareStatus = SquareStatus.Start;
         }
-    
-        public Uri? ImagePath { get; set; }
-        public bool AttackStatus { get; set; }
 
-        public Squid? Squid
-        {
-            get { return _squid; }
-            set
-            {
-                _squid = value;
-                if (value != null)
-                    AttackStatus = true;
-            }
-        }
+        public SquareStatus SquareStatus { get; set; }
+
+        public Squid? Squid { get; set; }
 
         public AttackResultCode AttackSquid()
         {
-            if (Squid != null && AttackStatus == true)
-            {
-                ImagePath = _enviromentVariables.SquareHitPath;
-                return Squid.Attack();
-            }
+            //Check to see if square has already been selected
+            if (SquareStatus != SquareStatus.Start)
+                return AttackResultCode.None;
             else
             {
-                ImagePath = _enviromentVariables.SquareMissPath;
-                return AttackResultCode.Miss;
+                if (Squid != null)
+                {
+                    SquareStatus = SquareStatus.Hit;
+                    return Squid.Attack();
+                }
+                else
+                {
+                    SquareStatus = SquareStatus.Miss;
+                    return AttackResultCode.Miss;
+                }
             }
-
         }
     }
 }

@@ -1,26 +1,28 @@
-﻿using System.Reflection;
+﻿using SplooshGameEngine;
+using SplooshGameEngine.Model;
+using System.Reflection;
 using System.Text;
 
-namespace SplooshGameEngine.Model
+namespace SplooshKaboom.GameEngine
 {
     public class GameState
     {
         private static readonly int _boardSize = 8;
-        private EnvironmentVariables _environmentVariables;
 
-        public GameState(EnvironmentVariables environmentVariables)
+        public GameState()
         {
-            _environmentVariables = environmentVariables;
         }
 
         public int SquidsLeft { get; private set; }
         public int ShotCount { get; private set; }
+        public int MaxShotCount { get; private set; }
         public int HighScore { get; private set; }
         public List<List<Square>>? Board { get; set; }
 
         public void SetupGame()
         {
-            ShotCount = 24;
+            ShotCount = 0;
+            MaxShotCount = 24;
             SquidsLeft = 3;
             HighScore = ReturnHighScore();
             Board = GenerateNewBoard();
@@ -40,7 +42,7 @@ namespace SplooshGameEngine.Model
                     //Fill list with default value of sea state
                     //int[] squarePosition = { row, col };
 
-                    newRow.Add(new Square(_environmentVariables));
+                    newRow.Add(new Square());
                 }
 
                 tempBoard.Add(newRow);
@@ -133,15 +135,59 @@ namespace SplooshGameEngine.Model
         /// <returns> Attack Result Code</returns>
         public AttackResultCode MakeShot(int[] index)
         {
-            return Board[index[0]][index[1]].AttackSquid();
+            var attackResult = Board[index[0]][index[1]].AttackSquid();
+            ShotCount++;
+
+            if (attackResult == AttackResultCode.SquidDead)
+            {
+                SquidsLeft--;
+                if (SquidsLeft == 0)
+                {
+                    CheckForHighScore();
+                    return AttackResultCode.GameWin;
+                }
+                return attackResult;
+            }
+            else // Hit or miss
+            {
+                if (ShotCount == MaxShotCount)
+                {
+                    CheckForHighScore();
+                    return AttackResultCode.GameLose;
+                }
+                else
+                    return attackResult;
+            }
         }
 
         /// <summary>
-        /// Reads the HighScore textfile and returns the stored value
+        /// Checks whether the final score of the user beats that of the stored Highscore
+        /// If so, it updates the Highscore property and writes the new result to the Highscore file.
         /// </summary>
-        public int ReturnHighScore()
+        private void CheckForHighScore()
         {
-            string path = _environmentVariables.HighScorePath;
+
+            if (ShotCount < HighScore)
+            {
+                //update highscore property and textfile
+
+                string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string path = $@"{assemblyDirectory}/HighScore.txt";
+                HighScore = ShotCount;
+
+                //Overwrites all text in file
+                File.WriteAllText(path, HighScore.ToString());
+            }
+        }
+
+            /// <summary>
+            /// Reads the HighScore textfile and returns the stored value
+            /// </summary>
+            public int ReturnHighScore()
+        {
+
+            string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string path = $@"{assemblyDirectory}/HighScore.txt";
             StringBuilder stringBuilder = new StringBuilder();
 
             try

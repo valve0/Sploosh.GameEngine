@@ -2,8 +2,6 @@
 {
     public class Squid
     {
-        public Squid() { }
-
         public Squid(int length)
         {
             Length = length;

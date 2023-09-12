@@ -5,12 +5,10 @@ namespace SplooshGameEngine
 {
     public class SquareTests
     {
-        private EnvironmentVariables _environmentVariables;
         private Square _square;
 
         public SquareTests()
         {
-            _environmentVariables = new EnvironmentVariables();
             _square = new Square(_environmentVariables);
         }
 

@@ -2,8 +2,11 @@
 {
     public enum AttackResultCode
     {
+        None,
         Miss,
         Hit,
-        SquidDead
+        SquidDead,
+        GameWin,
+        GameLose
     }
 }
