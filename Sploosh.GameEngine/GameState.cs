@@ -1,9 +1,9 @@
-﻿using SplooshGameEngine;
-using SplooshGameEngine.Model;
+﻿
+using Sploosh.GameEngine.Model;
 using System.Reflection;
 using System.Text;
 
-namespace SplooshKaboom.GameEngine
+namespace Sploosh.GameEngine
 {
     public class GameState
     {

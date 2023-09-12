@@ -1,4 +1,5 @@
-﻿namespace SplooshGameEngine.Model
+﻿
+namespace Sploosh.GameEngine.Model
 {
     public class Squid
     {

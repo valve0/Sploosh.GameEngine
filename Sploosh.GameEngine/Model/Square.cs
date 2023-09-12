@@ -1,6 +1,4 @@
-﻿using SplooshKaboom.GameEngine;
-
-namespace SplooshGameEngine.Model
+﻿namespace Sploosh.GameEngine.Model
 {
     public class Square
     {

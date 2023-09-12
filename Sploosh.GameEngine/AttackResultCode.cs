@@ -1,4 +1,4 @@
-﻿namespace SplooshGameEngine
+﻿namespace Sploosh.GameEngine
 {
     public enum AttackResultCode
     {

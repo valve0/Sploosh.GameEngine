@@ -1,9 +1,7 @@
-﻿using SplooshGameEngine.Model;
-using SplooshKaboom.GameEngine;
-using System.Reflection;
+﻿using Sploosh.GameEngine.Model;
 using Xunit;
 
-namespace SplooshGameEngine
+namespace Sploosh.GameEngine
 {
     public class GameStateTests
     {
@@ -14,8 +12,8 @@ namespace SplooshGameEngine
         public GameStateTests()
         {
             // Arrange
-             _gameState = new GameState();
-            
+            _gameState = new GameState();
+
             //Create mock board of grid of 8 x 8 Squares
             _board = new List<List<Square>>(_boardSize);
 
@@ -45,7 +43,7 @@ namespace SplooshGameEngine
             Assert.Equal(9, board.SelectMany(row => row).Count(square => square.Squid != null));
 
             //Make sure squids are placed horizontally and vertically
-             
+
         }
 
         // Attack square - based on whats in the square "hit", or "squid killed" or "miss"
@@ -95,7 +93,7 @@ namespace SplooshGameEngine
         [Fact]
         public void MakeShotShouldReturnMissifNoSquidPresent()
         {
-            int[] targetSquare = new int[]{ 0, 0 };
+            int[] targetSquare = new int[] { 0, 0 };
 
             var attackResultCode = _gameState.MakeShot(targetSquare);
 

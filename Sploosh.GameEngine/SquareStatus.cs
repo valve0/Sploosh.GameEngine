@@ -1,4 +1,4 @@
-﻿namespace SplooshKaboom.GameEngine
+﻿namespace Sploosh.GameEngine
 {
     public enum SquareStatus
     {

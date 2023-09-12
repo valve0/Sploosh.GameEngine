@@ -1,4 +1,6 @@
-﻿using SplooshGameEngine.Model;
+﻿
+using Sploosh.GameEngine;
+using Sploosh.GameEngine.Model;
 using Xunit;
 
 namespace SplooshGameEngine
