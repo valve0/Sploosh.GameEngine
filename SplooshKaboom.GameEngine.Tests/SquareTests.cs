@@ -9,7 +9,7 @@ namespace SplooshGameEngine
 
         public SquareTests()
         {
-            _square = new Square(_environmentVariables);
+            _square = new Square();
         }
 
         [Fact]
@@ -22,7 +22,6 @@ namespace SplooshGameEngine
 
             // Act
             var returnValue = _square.AttackSquid();
-            Assert.Equal(_square.ImagePath, _environmentVariables.SquareHitPath);
             Assert.Equal(AttackResultCode.Hit, returnValue);
         }
 
@@ -31,7 +30,6 @@ namespace SplooshGameEngine
         {
             // Act
             var returnValue = _square.AttackSquid();
-            Assert.Equal(_square.ImagePath, _environmentVariables.SquareMissPath);
             Assert.Equal(AttackResultCode.Miss, returnValue);
         }
 

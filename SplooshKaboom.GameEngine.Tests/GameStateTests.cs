@@ -8,16 +8,13 @@ namespace SplooshGameEngine
     public class GameStateTests
     {
         private List<List<Square>> _board;
-        private EnvironmentVariables _environmentVariables;
         private GameState _gameState;
         private int _boardSize = 8;
 
         public GameStateTests()
         {
             // Arrange
-            _environmentVariables = new EnvironmentVariables();
-
-             _gameState = new GameState(_environmentVariables);
+             _gameState = new GameState();
             
             //Create mock board of grid of 8 x 8 Squares
             _board = new List<List<Square>>(_boardSize);
@@ -27,7 +24,7 @@ namespace SplooshGameEngine
                 List<Square> newRow = new List<Square>(_boardSize);
 
                 for (int col = 0; col < _boardSize; col++)
-                    newRow.Add(new Square(_environmentVariables));
+                    newRow.Add(new Square());
 
                 _board.Add(newRow);
             }
@@ -57,10 +54,7 @@ namespace SplooshGameEngine
         public void ShouldReturnHighScore()
         {
             // Arrange
-            EnvironmentVariables environmentVariables = new();
-            environmentVariables.HighScorePath = "HighScore.txt";
-
-            GameState gameState = new(environmentVariables);
+            GameState gameState = new();
 
             var highScore = gameState.ReturnHighScore();
 
