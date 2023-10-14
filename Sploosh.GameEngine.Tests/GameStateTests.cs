@@ -1,4 +1,6 @@
-﻿using Sploosh.GameEngine.Model;
+﻿using Moq;
+using Sploosh.GameEngine.FileHandler;
+using Sploosh.GameEngine.Model;
 using Xunit;
 
 namespace Sploosh.GameEngine
@@ -11,8 +13,13 @@ namespace Sploosh.GameEngine
 
         public GameStateTests()
         {
+            var textFileHandlerMock = new Mock<ITextFileHandler>();
+
+            textFileHandlerMock.Setup(tf => tf.ReadFromFile("HighScore"))
+                .Returns("20");
+
             // Arrange
-            _gameState = new GameState();
+            _gameState = new GameState(textFileHandlerMock.Object);
 
             //Create mock board of grid of 8 x 8 Squares
             _board = new List<List<Square>>(_boardSize);
@@ -48,16 +55,7 @@ namespace Sploosh.GameEngine
 
         // Attack square - based on whats in the square "hit", or "squid killed" or "miss"
 
-        [Fact]
-        public void ShouldReturnHighScore()
-        {
-            // Arrange
-            GameState gameState = new();
 
-            var highScore = gameState.ReturnHighScore();
-
-            Assert.Equal(20, highScore);
-        }
 
         [Fact]
         public void MakeShotShouldReturnHitifSquidPresentAndNotDead()
@@ -98,6 +96,20 @@ namespace Sploosh.GameEngine
             var attackResultCode = _gameState.MakeShot(targetSquare);
 
             Assert.Equal(AttackResultCode.Miss, attackResultCode);
+        }
+
+        [Fact]
+        public void ShouldReturnHighScore()
+        {
+            var highScore = _gameState.ReturnHighScore();
+
+            Assert.Equal(20, highScore);
+        }
+
+        [Fact]
+        public void ShouldSaveNewHighScoreToFile()
+        {
+
         }
     }
 }

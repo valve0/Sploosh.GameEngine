@@ -1,19 +1,31 @@
-﻿
+﻿using Sploosh.GameEngine.FileHandler;
 using Sploosh.GameEngine.Model;
-using System.Reflection;
-using System.Text;
 
 namespace Sploosh.GameEngine
 {
-    public class GameState
+
+    public interface IGameState
+    {
+        public void SetupGame();
+        public AttackResultCode MakeShot(int[] index);  
+        public int GetHighScore();
+        public void UpdateHighScore();
+
+    }
+
+    public class GameState : IGameState
     {
         private static readonly int _boardSize = 8;
+        private ITextFileHandler _textFileHandler;
 
         public GameState()
         {
+            _textFileHandler = new TextFileHandler();
         }
 
-        public int SquidsLeft { get; private set; }
+        public int SquidKillCount { get; private set; }
+        public int MaxSquidCount { get; private set; }
+        public int BoardSize { get; private set; }
         public int ShotCount { get; private set; }
         public int MaxShotCount { get; private set; }
         public int HighScore { get; private set; }
@@ -23,9 +35,11 @@ namespace Sploosh.GameEngine
         {
             ShotCount = 0;
             MaxShotCount = 24;
-            SquidsLeft = 3;
-            HighScore = ReturnHighScore();
+            SquidKillCount = 0;
+            MaxSquidCount = 3;
+            BoardSize = 8;
             Board = GenerateNewBoard();
+            HighScore = GetHighScore();
         }
 
         public List<List<Square>> GenerateNewBoard()
@@ -140,10 +154,10 @@ namespace Sploosh.GameEngine
 
             if (attackResult == AttackResultCode.SquidDead)
             {
-                SquidsLeft--;
-                if (SquidsLeft == 0)
+                SquidKillCount++;
+                if (SquidKillCount == MaxSquidCount)
                 {
-                    CheckForHighScore();
+                    UpdateHighScore();
                     return AttackResultCode.GameWin;
                 }
                 return attackResult;
@@ -152,7 +166,7 @@ namespace Sploosh.GameEngine
             {
                 if (ShotCount == MaxShotCount)
                 {
-                    CheckForHighScore();
+                    UpdateHighScore();
                     return AttackResultCode.GameLose;
                 }
                 else
@@ -161,66 +175,24 @@ namespace Sploosh.GameEngine
         }
 
         /// <summary>
+        /// Returns Highscore value stored in text file
+        /// </summary>
+        public int GetHighScore()
+        {
+            return int.Parse(_textFileHandler.ReadFromFile("HighScore.txt"));
+        }
+
+        /// <summary>
         /// Checks whether the final score of the user beats that of the stored Highscore
         /// If so, it updates the Highscore property and writes the new result to the Highscore file.
         /// </summary>
-        private void CheckForHighScore()
+        public void UpdateHighScore()
         {
 
             if (ShotCount < HighScore)
             {
-                //update highscore property and textfile
-
-                string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string path = $@"{assemblyDirectory}/HighScore.txt";
-                HighScore = ShotCount;
-
-                //Overwrites all text in file
-                File.WriteAllText(path, HighScore.ToString());
+                _textFileHandler.WriteToFile("HighScore.txt", (ShotCount).ToString());
             }
         }
-
-            /// <summary>
-            /// Reads the HighScore textfile and returns the stored value
-            /// </summary>
-            public int ReturnHighScore()
-        {
-
-            string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string path = $@"{assemblyDirectory}/HighScore.txt";
-            StringBuilder stringBuilder = new StringBuilder();
-
-            try
-            {
-                if (File.Exists(path))
-                {
-                    foreach (string line in File.ReadAllLines(path))
-                    {
-                        if (line != null)
-                            stringBuilder.AppendLine(line);
-                    }
-                }
-            }
-            catch (FileNotFoundException fnfex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("The file couldn't be found!");
-                Console.WriteLine(fnfex.Message);
-                Console.WriteLine(fnfex.StackTrace);
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Something went wrong while loading the file!");
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Console.ResetColor();
-            }
-
-            return int.Parse(stringBuilder.ToString().Replace("\r\n", string.Empty));
-        }
-
     }
 }
