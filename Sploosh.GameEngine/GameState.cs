@@ -16,11 +16,10 @@ namespace Sploosh.GameEngine
     public class GameState : IGameState
     {
         private static readonly int _boardSize = 8;
-        private ITextFileHandler _textFileHandler;
 
         public GameState()
         {
-            _textFileHandler = new TextFileHandler();
+            TextFileHandler = new TextFileHandler();
         }
 
         public int SquidKillCount { get; private set; }
@@ -30,6 +29,7 @@ namespace Sploosh.GameEngine
         public int MaxShotCount { get; private set; }
         public int HighScore { get; private set; }
         public List<List<Square>>? Board { get; set; }
+        public ITextFileHandler TextFileHandler { get; set; }
 
         public void SetupGame()
         {
@@ -179,7 +179,7 @@ namespace Sploosh.GameEngine
         /// </summary>
         public int GetHighScore()
         {
-            return int.Parse(_textFileHandler.ReadFromFile("HighScore.txt"));
+            return int.Parse(TextFileHandler.ReadFromFile("HighScore.txt"));
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Sploosh.GameEngine
 
             if (ShotCount < HighScore)
             {
-                _textFileHandler.WriteToFile("HighScore.txt", (ShotCount).ToString());
+                TextFileHandler.WriteToFile("HighScore.txt", (ShotCount).ToString());
             }
         }
     }

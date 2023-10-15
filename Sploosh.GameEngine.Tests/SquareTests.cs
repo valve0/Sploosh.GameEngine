@@ -1,5 +1,4 @@
-﻿
-using Sploosh.GameEngine;
+﻿using Sploosh.GameEngine;
 using Sploosh.GameEngine.Model;
 using Xunit;
 

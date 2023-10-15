@@ -15,11 +15,12 @@ namespace Sploosh.GameEngine
         {
             var textFileHandlerMock = new Mock<ITextFileHandler>();
 
-            textFileHandlerMock.Setup(tf => tf.ReadFromFile("HighScore"))
+            textFileHandlerMock.Setup(tf => tf.ReadFromFile("HighScore.txt"))
                 .Returns("20");
 
             // Arrange
-            _gameState = new GameState(textFileHandlerMock.Object);
+            _gameState = new GameState();
+            _gameState.TextFileHandler = textFileHandlerMock.Object;
 
             //Create mock board of grid of 8 x 8 Squares
             _board = new List<List<Square>>(_boardSize);
@@ -101,7 +102,7 @@ namespace Sploosh.GameEngine
         [Fact]
         public void ShouldReturnHighScore()
         {
-            var highScore = _gameState.ReturnHighScore();
+            var highScore = _gameState.GetHighScore();
 
             Assert.Equal(20, highScore);
         }
